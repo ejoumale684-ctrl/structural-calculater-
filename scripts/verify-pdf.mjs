@@ -1,0 +1,10 @@
+import fs from "node:fs";
+import { calculateBoltShear } from "../client/src/lib/boltShearCalculator.ts";
+import { createCalculationPdf } from "../client/src/lib/pdfExport.ts";
+const inputs = { boltGrade: "8.8", boltSize: "M20", boltCount: 4, numberOfShearPlanes: 1, threadedShearPlane: true, appliedShear: 120 };
+const result = calculateBoltShear(inputs);
+const ns2 = calculateBoltShear({ ...inputs, numberOfShearPlanes: 2 });
+if (result.boltResistance !== 94.08 || result.totalResistance !== 376.32 || ns2.boltResistance !== 188.16 || ns2.totalResistance !== 752.64) throw new Error("Shear-plane calculation regression");
+const pdf = createCalculationPdf(result);
+fs.writeFileSync("/tmp/bolt-shear-current.pdf", Buffer.from(pdf.output("arraybuffer")));
+console.log(JSON.stringify({ pages: pdf.getNumberOfPages(), file: "/tmp/bolt-shear-current.pdf", result: { boltResistance: result.boltResistance, totalResistance: result.totalResistance, requiredBolts: result.requiredBolts, ns2BoltResistance: ns2.boltResistance, ns2TotalResistance: ns2.totalResistance } }));
