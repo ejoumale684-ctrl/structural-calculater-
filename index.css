@@ -1,0 +1,461 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* ═══════════════════════════════════════════════════
+   TOKENS
+   ═══════════════════════════════════════════════════ */
+:root {
+  --paper:       #f7f4ed;
+  --paper-deep:  #eee9df;
+  --ink:         #102b40;
+  --ink-soft:    #355064;
+  --slate:       #718592;
+  --line:        #d9d6ce;
+  --line-dark:   #bfc6c8;
+  --brass:       #c57a36;
+  --brass-lt:    #f0d2b1;
+  --success:     #2c6b58;
+  --success-bg:  #d9ede3;
+  --danger:      #a14338;
+  --danger-bg:   #f1dbd8;
+  --white:       #fffdf8;
+  --shadow:      0 18px 50px rgba(16,43,64,.09);
+  font-family: 'IBM Plex Sans', sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+/* ═══════════════════════════════════════════════════
+   RESET
+   ═══════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; }
+html  { scroll-behavior: smooth; }
+body  { margin: 0; background: var(--paper); color: var(--ink); font-size: 15px; line-height: 1.5; }
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+sub   { font-size: .72em; vertical-align: sub; }
+
+/* ═══════════════════════════════════════════════════
+   APP SHELL
+   ═══════════════════════════════════════════════════ */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header ── */
+.app-header {
+  background: var(--ink);
+  border-bottom: 3px solid var(--brass);
+  padding: 0 clamp(16px, 4vw, 48px);
+  height: 72px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.app-header-inner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.brand-mark {
+  width: 42px;
+  height: 42px;
+  border: 1.5px solid var(--brass);
+  color: var(--brass);
+  display: grid;
+  place-items: center;
+  font: 500 24px Fraunces, serif;
+  transform: rotate(-12deg);
+  flex-shrink: 0;
+}
+.app-title {
+  font: 500 20px Fraunces, serif;
+  color: #e9edea;
+  margin: 0;
+  letter-spacing: .03em;
+}
+.app-std {
+  display: block;
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #8ea6af;
+  margin-top: 2px;
+}
+
+/* ── Two-column layout ── */
+.layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 0;
+  min-height: 0;
+}
+
+/* ── Footer ── */
+.app-footer {
+  text-align: center;
+  padding: 14px clamp(16px, 4vw, 48px);
+  color: var(--slate);
+  font-size: 10px;
+  letter-spacing: .06em;
+  border-top: 1px solid var(--line);
+}
+
+/* ═══════════════════════════════════════════════════
+   PANES (shared)
+   ═══════════════════════════════════════════════════ */
+.pane {
+  padding: clamp(20px, 3vw, 36px);
+  overflow-y: auto;
+}
+.pane-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 18px;
+  margin-bottom: 22px;
+  border-bottom: 2px solid var(--ink);
+}
+.pane-label {
+  font: 500 13px Fraunces, serif;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: var(--ink);
+}
+
+/* ═══════════════════════════════════════════════════
+   LEFT PANE — INPUTS
+   ═══════════════════════════════════════════════════ */
+.pane-inputs {
+  background: var(--white);
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Field grid — single column inside left pane */
+.fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 16px;
+  flex: 1;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.field-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.field-hint {
+  display: block;
+  font-size: 11px;
+  color: var(--slate);
+}
+
+/* Inputs & selects */
+.field select,
+.field input[type="number"] {
+  height: 40px;
+  border: 1px solid var(--line-dark);
+  background: #fbfaf6;
+  color: var(--ink);
+  padding: 0 10px;
+  outline: none;
+  margin-top: 5px;
+  width: 100%;
+}
+.field select:focus,
+.field input[type="number"]:focus {
+  border-color: var(--brass);
+  box-shadow: 0 0 0 3px rgba(197,122,54,.12);
+}
+
+/* Hide number spinners */
+.field input[type="number"]::-webkit-outer-spin-button,
+.field input[type="number"]::-webkit-inner-spin-button { appearance: none; margin: 0; }
+.field input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+
+/* Unit input */
+.unit-input { display: flex; align-items: stretch; margin-top: 5px; }
+.unit-input input[type="number"] {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+  border-right: 0;
+  height: 40px;
+  border: 1px solid var(--line-dark);
+  background: #fbfaf6;
+  color: var(--ink);
+  padding: 0 10px;
+  outline: none;
+}
+.unit-input input[type="number"]:focus {
+  border-color: var(--brass);
+  box-shadow: 0 0 0 3px rgba(197,122,54,.12);
+}
+.unit-input input[type="number"]::-webkit-outer-spin-button,
+.unit-input input[type="number"]::-webkit-inner-spin-button { appearance: none; margin: 0; }
+.unit-input input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+.unit-badge {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  background: var(--paper-deep);
+  border: 1px solid var(--line-dark);
+  font-size: 12px;
+  color: var(--slate);
+  white-space: nowrap;
+}
+
+/* Validation error */
+.field-error {
+  font-size: 11px;
+  color: var(--danger);
+  margin-top: 4px;
+  display: block;
+}
+
+/* Threaded toggle */
+.toggle-row {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 6px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  width: 100%;
+}
+.toggle-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.toggle-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.toggle-state  {
+  font-size: 12px;
+  color: var(--brass);
+  font-weight: 700;
+  min-width: 28px;
+}
+
+/* Toggle switch */
+.switch {
+  border: 1px solid var(--line-dark);
+  width: 42px;
+  height: 23px;
+  border-radius: 14px;
+  background: #d8dddd;
+  padding: 2px;
+  flex-shrink: 0;
+}
+.switch span {
+  display: block;
+  background: white;
+  border-radius: 50%;
+  width: 17px;
+  height: 17px;
+  transition: transform .18s;
+}
+.switch.on { background: var(--brass); border-color: var(--brass); }
+.switch.on span { transform: translateX(18px); }
+
+/* Calculate button */
+.btn-calc {
+  margin-top: 22px;
+  height: 46px;
+  width: 100%;
+  background: var(--ink);
+  color: white;
+  border: 0;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  transition: background .15s, transform .12s;
+}
+.btn-calc:hover  { background: #1d4259; }
+.btn-calc:active { transform: scale(.98); }
+
+/* ═══════════════════════════════════════════════════
+   RIGHT PANE — RESULTS
+   ═══════════════════════════════════════════════════ */
+.pane-results {
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.pane-results.pass { background: var(--paper); }
+.pane-results.fail { background: var(--paper); }
+.pane-results.idle { background: var(--paper); }
+
+/* PDF button */
+.btn-pdf {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--ink);
+  color: white;
+  border: 0;
+  padding: 8px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .05em;
+  transition: background .15s, transform .12s;
+}
+.btn-pdf:hover  { background: #1d4259; }
+.btn-pdf:active { transform: scale(.97); }
+
+/* Empty state */
+.results-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--slate);
+  font-size: 13px;
+  min-height: 200px;
+  border: 2px dashed var(--line-dark);
+}
+
+/* Status banner */
+.status-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  margin-bottom: 20px;
+  align-self: flex-start;
+}
+.status-banner.safe { background: var(--success-bg); color: var(--success); }
+.status-banner.ns   { background: var(--danger-bg);  color: var(--danger); }
+
+/* Result rows */
+.result-rows {
+  background: var(--white);
+  border: 1px solid var(--line);
+  margin-bottom: 16px;
+}
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+}
+.result-row:last-child { border-bottom: 0; }
+.result-row.accent { background: #fdf9f3; }
+.result-row-label { color: var(--ink-soft); }
+.result-row-value { font-weight: 700; font-size: 14px; color: var(--ink); }
+
+/* UC bar */
+.uc-bar-wrap  { margin-bottom: 20px; }
+.uc-bar-track {
+  height: 6px;
+  background: var(--line);
+  margin-bottom: 7px;
+}
+.uc-bar-fill {
+  height: 100%;
+  transition: width .2s ease-out;
+}
+.uc-bar-fill.safe { background: var(--brass); }
+.uc-bar-fill.ns   { background: var(--danger); }
+.uc-bar-label {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+.uc-bar-label b { color: var(--brass); font-size: 14px; }
+
+/* ═══════════════════════════════════════════════════
+   COMPACT CALCULATION STEPS (inside right pane)
+   ═══════════════════════════════════════════════════ */
+.calc-steps {
+  background: var(--white);
+  border: 1px solid var(--line);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.steps-heading {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: var(--brass);
+  margin-bottom: 14px;
+}
+.step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  align-items: baseline;
+  font-size: 13px;
+}
+.step:last-child { border-bottom: 0; }
+.step-formula {
+  color: var(--slate);
+  font-style: italic;
+  white-space: nowrap;
+  font-size: 12px;
+}
+.step-value  { color: var(--ink); }
+.step-value b{ color: var(--ink); font-weight: 700; }
+
+.step-verdict {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-left: 8px;
+}
+.verdict-safe { background: var(--success-bg); color: var(--success); }
+.verdict-ns   { background: var(--danger-bg);  color: var(--danger); }
+
+/* ═══════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .pane-inputs {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+}
+
+@media (max-width: 560px) {
+  .fields { grid-template-columns: 1fr; }
+  .step   { grid-template-columns: 1fr; gap: 2px; }
+  .step-formula { white-space: normal; }
+  .app-header { height: auto; padding-top: 14px; padding-bottom: 14px; }
+  .result-row { flex-direction: column; align-items: flex-start; gap: 2px; }
+}
